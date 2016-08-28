@@ -1,0 +1,371 @@
+
+html, body, #map-canvas {
+    height: 100%;
+    background-color: #A3CCFF;
+}
+
+
+header {
+    z-index: 1;
+    position: absolute;
+    width: 100%;
+    text-align: center;
+    background-color: rgb(255,127,80);
+    border-bottom: 2px solid rgb(252, 225, 194);
+    display: -webkit-box;      /* OLD - iOS 6-, Safari 3.1-6 */
+    display: -moz-box;         /* OLD - Firefox 19- (buggy but mostly works) */
+    display: -ms-flexbox;      /* TWEENER - IE 10 */
+    display: -webkit-flex;     /* NEW - Chrome */
+    display: flex;             /* NEW, Spec - Opera 12.1, Firefox 20+ */
+    -webkit-flex-direction: row;
+    -moz-flex-direction: row;
+    -ms-flex-direction: row;
+    -o-flex-direction: row;
+    flex-direction: row;
+}
+
+h1 {
+    -webkit-flex: 1;
+    -moz-flex: 1;
+    -ms-flex: 1;
+    -o-flex: 1;
+    flex: 1;
+    margin-top: 4px;
+    margin-right: 10px;
+    font-family: 'Pacifico', cursive;
+    font-size: 25px;
+    letter-spacing: 3px;
+    color: #FDE6B1;
+    text-shadow: 4px 1px 2px #76280D;
+}
+
+h2 {
+    text-transform: uppercase;
+   -webkit-flex: 2;
+   -moz-flex: 2;
+   -ms-flex: 2;
+   -o-flex: 2;
+   flex: 2;
+    margin: 20px 0px;
+    font-family: 'Merriweather Sans', sans-serif;
+    font-weight: 400;
+    font-size: 13px;
+    margin-bottom: 10px;
+}
+
+header .intro {
+    -webkit-flex: .4;
+    -moz-flex: .4;
+    -ms-flex: .4;
+    -o-flex: .4;
+    flex: .4;
+    width: 20%;
+}
+
+
+header .icon {
+    height: 28px;
+    width: 28px;
+    background-color: #FCF8D8;
+    margin-top: 10px;
+    border: 1px solid black;
+    border-radius: 22px;
+    padding: 3px;
+    cursor: pointer;
+    transition: all 0.5s ease;
+}
+
+header .icon:hover {
+    background-color: #FFFFF0;
+}
+
+
+/* About author section */
+/* ------------------------------------------------*/
+
+.about  {
+    text-align: center;
+    display: none;
+    font-size: 13px;
+    position: absolute;
+    z-index: 1;
+    top: 90%;
+    left: 3%;
+    width: 200px;
+    padding: 10px;
+    background: rgba(0,0,0,.8);
+    color: #F5F5DC;
+    border-radius: 10px;
+    font-family: 'Merriweather Sans', sans-serif;
+    font-weight: 300;
+    line-height: 26px;
+}
+
+.about.open-about {
+    display: block;
+}
+
+.about.open-about .author-image {
+    width: 100px;
+    height: 100px;
+    border-radius: 5em;
+    border: 2px solid #F5F5DC;
+    margin-bottom: 6px;
+}
+
+.about.open-about a {
+    color: #FFA500;
+    text-decoration: none; 
+    transition: all 0.5s;
+}
+
+.about.open-about a:hover {
+    color: #FF4500;
+}
+
+
+
+/* Search field */
+/* ------------------------------------------------*/
+
+#panel {
+    -webkit-flex: 2.6;
+    -moz-flex: 2.6;
+    -ms-flex: 2.6;
+    -o-flex: 2.6;
+    flex: 2.6;
+    padding: 15px;
+    text-align: right;
+}
+
+.buttons {
+    display: inline-block;
+}
+
+#panel input {
+    display: inline-block;
+    border: 1px outset #5F2E18;
+    width: 160px;
+    border-radius: 4px;
+    -webkit-padding: 4px;
+    padding: 4px;
+    font-family: 'Merriweather Sans', sans-serif;
+    font-weight: 300;
+    font-size: 13px;
+    background-color: #FFFFF0;
+    color: #5F2E18;
+    outline: none;
+    text-align: center;
+    box-shadow: inset 0 0 7px #8B4513;
+     transition: all .7s ease;
+}
+
+
+/* fix the Safari issue with appearance of searchfield */
+input[type="search"] {
+    -webkit-appearance: textfield;
+}
+
+
+#panel .submit,
+#panel .reset {
+    width: 80px;
+    color: white;
+    background-color: #A0522D;
+    cursor: pointer;
+}
+
+#panel .submit:hover,
+#panel .submit:active,
+#panel .reset:hover,
+#panel .reset:active {
+    background-color: #6B4B1C;
+}
+
+
+
+.question-mark {
+    text-align: center;
+    display: inline-block;
+    margin-left: 10px;
+    margin-right: 16px;
+    padding: 2px;
+    border: 1px solid black;
+    color: white;
+    border-radius: 25px;
+    background-color: #A0522D;
+    width: 14px;
+    height: 14px;
+    font-size: 13px;
+    background-color: #CD853F;
+    cursor: pointer;
+    transition: all .5s ease;
+}
+
+.question-mark:hover {
+    background-color: #FF4500;
+}
+
+
+/* Zip codes section */
+/* ------------------------------------------------*/
+
+#panel .valid-codes {
+    display: none;
+}
+
+#panel .valid-codes p {
+    padding-bottom: 5px;
+}
+
+#panel .valid-codes.show-instructions {
+    text-align: center;
+    font-size: 12px;
+    display: block;
+    position: absolute;
+    z-index: 1;
+    top: 45px;
+    right: 40px;
+    width: 300px;
+    padding: 8px;
+    background: rgba(0,0,0,.8);
+    color: #F5F5DC;
+    border-radius: 10px;
+    font-family: 'Merriweather Sans', sans-serif;
+    font-weight: 300;
+    cursor: default;
+}
+
+table td {
+    border: 1px solid #999;
+    padding: 1px 3px;
+    text-align: left;
+}
+
+
+/* Infobox content */
+/* ------------------------------------------------*/
+
+.wrapper {
+    max-width: 300px;
+    max-height: 250px;
+    margin-top: 8px;
+    padding: 15px 15px 10px 15px;
+    display: -webkit-box;     
+    display: -moz-box;         
+    display: -ms-flexbox;      
+    display: -webkit-flex;     
+    display: flex;       
+    -webkit-justify-content: space-between;
+    -moz-justify-content: space-between;
+    -ms-justify-content: space-between;
+    -o-justify-content: space-between;    
+    justify-content: space-between;
+    background-color: #96BE00;
+    border: 1px solid rgb(252, 225, 194);
+    border-radius: 3px;
+    font-family: 'Merriweather Sans', sans-serif;
+}
+
+/* make an arrow on top of the infobox*/
+.wrapper:before{
+  content : " ";
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  position:absolute;
+  top: 0;
+  left: 140px;
+  border-bottom: 10px solid #96BE00;
+}
+
+/* position close button */
+.infoBox>img {
+    top: 12px;
+    right: 17px;
+    width: 12px;
+    height: 12px;
+}
+
+.wrapper .text {
+    -webkit-flex: 1;
+    -moz-flex: 1;
+    -ms-flex: 1;
+    -o-flex: 1;
+    flex: 1;
+    margin-right: 5px;
+}
+
+.wrapper .name {
+    text-transform: uppercase;
+    font-size: 14px;
+    color: #1E90FF;
+    font-weight: 700;
+    margin: 6px;
+}
+
+.wrapper .rating {
+    height: 24px;
+}
+
+.wrapper .text p {
+    margin-top: 5px;
+    font-size: 15px;
+    font-weight: 300;
+}
+
+.wrapper .text a {
+    text-transform: uppercase;
+    color: #4169E1;
+    font-weight: 700;
+    letter-spacing: 0.6px;
+    text-decoration: none;
+    font-size: 12px;
+    margin-bottom: 5px; 
+    transition: all 0.5s;
+}
+
+.wrapper .text a:hover {
+    color: #F7340F;
+}
+
+.wrapper .shop-image {
+    border: 1px solid rgb(252, 225, 194);
+    -webkit-flex: 1;
+    -moz-flex: 1;
+    -ms-flex: 1;
+    -o-flex: 1;
+    flex: 1;
+    width: 100%;
+    height: 100%;
+    max-width: 135px;
+    max-height: 135px;
+    min-width: 100px;
+    min-height: 100px;
+    background-color: #FDE6B1;
+    margin-top: 5px;
+    border-radius: 3px;
+}
+
+.wrapper label {
+    margin-left: 5px;
+    cursor: pointer;
+}
+
+.wrapper .checkbox {
+    display: none;
+}
+
+.wrapper .heart::before {
+    content: '';
+    height: 30px;
+    width: 30px;
+    background: url(../images/heart.png) 0 0 no-repeat;
+    display: inline-block;
+    margin-top: 5px;
+}
+
+.wrapper input[type="checkbox"]:checked + .heart::before {
+    background-position: -30px 0;
+}

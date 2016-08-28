@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Chocoguide</title>
+	<meta charset="utf-8">
+	<meta name="description" content="Welcome to the Chocoguide, a Chocolate Shop Guide in San Francisco">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="css/reset.css">
+	<link rel="stylesheet" href="css/chocoguide.css">
+	<link rel="stylesheet" media="(max-width: 960px)" href="css/chocoguide-mobile.css">
+	<link href='https://fonts.googleapis.com/css?family=Pacifico' rel='stylesheet' type='text/css'>
+	<link href='https://fonts.googleapis.com/css?family=Merriweather+Sans:300,400,700' rel='stylesheet' type='text/css'>
+</head>
+
+
+<!-- ===================Body ========================== -->
+
+<body>
+	<header>
+		<div class="intro">
+			<img class="icon" src="images/cablecar.png" alt="cable car icon">
+
+			<div class="about">
+				<img class="author-image" src="images/author.jpg" alt="Author's picture">
+				<p>CHOCOGUIDE is a  project created by Olga Fomin, a dedicated chocolate eater, language lover, and a front-end web developer. You can <a href="mailto:olga.fomin26@gmail.com">contact</a> her to invite her for a cup of hot chocolate and/or make an awesome job offer.</p>
+			</div>
+		</div>
+		<h1> ChocoGuide</h1>
+		<h2> A chocolate shop guide in the City by the Bay</h2>
+
+
+
+
+		<!-- ================== Search Form =================== -->
+
+		<form id="panel">
+	    	<input type="search" class="search" placeholder="Enter zip code" autofocus>
+
+	    	<div class="buttons">
+				<input type="submit" class="submit" value="Search">
+				<input type="reset" class="reset">
+			</div>
+
+    		<span class="question-mark">?</span>
+    		<div class="valid-codes">
+    			<p>To see the locations of chocolate shops in particular area, enter the relevant zip code:</p>
+	    		<table>
+		    		<tr>
+		    			<td>94102</td><td>Hayes Valley/Tenderloin/North of Market</td>
+		    		</tr>
+					<tr>
+		    			<td>94103</td><td>South of Market</td>
+		    		</tr>
+		    		<tr>
+		    			<td>94104</td><td>Financial District</td>
+		    		</tr>
+		    		<tr>
+		    			<td>94105</td><td>Embarcadero South</td>
+		    		</tr>
+		    		<tr>
+		    			<td>94107</td><td>Potrero Hill</td>
+		    		</tr>
+		    		<tr>
+		    			<td>94108</td><td>Chinatown</td>
+		    		</tr>
+		    		<tr>
+		    			<td>94109</td><td>Polk/Russian Hill (Nob Hill)</td>
+		    		</tr>
+		    		<tr>
+		    			<td>94110</td><td>Inner Mission/Bernal Heights</td>
+		    		</tr>
+		    		<tr>
+		    			<td>94111</td><td>Embarcadero North</td>
+		    		</tr>
+		    		<tr>
+		    			<td>94112</td><td>Ingelside-Excelsior/Crocker-Amazon</td>
+		    		</tr>
+		    		<tr>
+		    			<td>94114</td><td>Castro/Noe Valley</td>
+		    		</tr>
+		    		<tr>
+		    			<td>94115</td><td>Western Addition/Japantown</td>
+		    		</tr>
+		    		<tr>
+		    			<td>94116</td><td>Parkside/Forest Hill</td>
+		    		</tr>
+		    		<tr>
+		    			<td>94117</td><td>Haight-Ashbury</td>
+		    		</tr>
+		    		<tr>
+						<td>94118</td><td>Inner Richmond</td>
+					</tr>
+					<tr>
+						<td>94121</td><td>Outer Richmond</td>
+					</tr>
+					<tr>
+						<td>94122</td><td>Sunset</td>
+					</tr>
+					<tr>
+						<td>94123</td><td>Marina</td>
+					</tr>
+					<tr>
+						<td>94124</td><td>Bayview-Hunters Point</td>
+					</tr>
+					<tr>
+						<td>94127</td><td>St. Francis Wood/Miraloma/West Portal</td>
+					</tr>
+					<tr>
+		    			<td>94129</td><td>Presidio</td>
+		    		</tr>
+					<tr>
+						<td>94131</td><td>Twin Peaks/Glen Park</td>
+					</tr>
+					<tr>
+						<td>94132</td><td>Lake Merced</td>
+					</tr>
+					<tr>
+						<td>94133</td><td>North Beach/Chinatown</td>
+					</tr>
+					<tr>
+						<td>94134</td><td>Visitacion Valley/Sunnydale</td>
+					</tr>
+						<tr><td>94158</td><td>Mission Bay</td>
+					</tr>
+				</table>
+			</div> <!-- end of div valid-codes -->
+		</form>
+	</header>
+
+	<div id="map-canvas"></div>
+
+
+	<!-- ===================JS files ========================== -->
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBwrykWHHX6AqTYTeOhpHO1m4d3LaBPQng"></script>
+	<script src="js/oauth.js"></script>
+	<script src="js/sha1.js"></script>
+	  <script src="https://cdn.rawgit.com/googlemaps/v3-utility-library/master/infobox/src/infobox_packed.js"></script>
+	<script src="js/chocoguide.js"></script>
+
+</body>
+</html>
