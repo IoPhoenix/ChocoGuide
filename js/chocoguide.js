@@ -2,8 +2,7 @@
 // Structure
 // ------------------------------------------------
 
-var body = document.querySelector("body"),
-	map,
+const body = document.querySelector("body"),
 	mapContainer = document.getElementById("map-canvas"),
 	form = document.querySelector("form"),
 	search = document.querySelector(".search"),
@@ -11,22 +10,20 @@ var body = document.querySelector("body"),
 	aboutAuthor = document.querySelector(".about"),
 	questionMark = document.querySelector(".question-mark"),
 	validCodes = document.querySelector(".valid-codes"),
+	infoboxArray = [],
+	reset = document.querySelector(".reset"),
+	zipCodes = [94102, 94103, 94104, 94105, 94107, 94108, 94109, 94110, 94111, 94112, 94114, 94115, 94116, 94117, 94118, 94121, 94122, 94123, 94124, 94127, 94129, 94130, 94131, 94132, 94133, 94134, 94158];
+let markerMap = new Map(),
 	geocoder,
 	map,
 	marker,
-	markerMap = new Map(),
 	infobox,
-	infoboxArray = [],
-	checkbox,
-	reset = document.querySelector(".reset"),
-	zipCodes = [94102, 94103, 94104, 94105, 94107, 94108, 94109, 94110, 94111, 94112, 94114, 94115, 94116, 94117, 94118, 94121, 94122, 94123, 94124, 94127, 94129, 94130, 94131, 94132, 94133, 94134, 94158];
-
+	checkbox;
 
 
 
 // Events and Event Handlers
 // ==============================================================
-
 
 // load the initial google map
 google.maps.event.addDomListener(window, "load", initialize);
@@ -44,7 +41,6 @@ icon.addEventListener("click", function(e) {
 	aboutAuthor.classList.toggle("open-about");
 });
 
-
 // open text with valid zip codes when clicking on question mark icon
 questionMark.addEventListener("click", function() {
 	validCodes.classList.toggle("show-instructions");
@@ -52,61 +48,56 @@ questionMark.addEventListener("click", function() {
 
 reset.addEventListener("click", startNewSearch);
 
-
 // close about author box or box with valid zip codes
-// when clicking ourside the boxes
-document.addEventListener("click", function(e) {
-	var target = e.target;
+// when clicking anywhere on the page
+document.addEventListener("click", closeAuthorOrZipCodesBox);
 
-	if (target.className === 'icon' || target.className === 'question-mark') {
-		return;
-	} else {
-		aboutAuthor.classList.remove("open-about");
-		validCodes.classList.remove("show-instructions");
-	}
-});
+
+
+// Function
+// ==============================================================
 
 
 function initialize() {
-  	geocoder = new google.maps.Geocoder();
-	var latlng = new google.maps.LatLng(37.773972, -122.431297);
-	var mapOptions = {
-		scrollwheel: false,
-	    zoom: 12,
-	    center: latlng,
-	    mapTypeId: google.maps.MapTypeId.ROADMAP,
-	    panControl: false,
-	    mapTypeControl: true,
-    	mapTypeControlOptions: {
-	        style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
-	        position: google.maps.ControlPosition.RIGHT_BOTTOM
-	    },
-	    zoomControl: true,
-		zoomControlOptions: {
-	    	style: google.maps.ZoomControlStyle.LARGE,
-	    	position: google.maps.ControlPosition.LEFT_CENTER
-		}
+  geocoder = new google.maps.Geocoder();
+const latlng = new google.maps.LatLng(37.773972, -122.431297);
+const mapOptions = {
+	scrollwheel: false,
+	zoom: 12,
+	center: latlng,
+	mapTypeId: google.maps.MapTypeId.ROADMAP,
+	panControl: false,
+	mapTypeControl: true,
+	mapTypeControlOptions: {
+		style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
+		position: google.maps.ControlPosition.RIGHT_BOTTOM
+	},
+	zoomControl: true,
+	zoomControlOptions: {
+		style: google.maps.ZoomControlStyle.LARGE,
+		position: google.maps.ControlPosition.LEFT_CENTER
 	}
-  	map = new google.maps.Map(mapContainer, mapOptions);
+}
+  map = new google.maps.Map(mapContainer, mapOptions);
 }
 
 
 function resizeMap() {
-	 var center = map.getCenter();
-	 google.maps.event.trigger(map, "resize");
-	 map.setCenter(center);
+	const center = map.getCenter();
+	google.maps.event.trigger(map, "resize");
+	map.setCenter(center);
 };
 
 
 // Authentication keys/tokens
-var auth = { 
-    consumerKey:       "WfF4qCvm5PnHJ-VlvcUaDQ", 
-    consumerSecret:    "lyloFsc0RBOmcC97d59SFTaPKjo",
-    accessToken:       "ZPpWuZk8pEcNEJ9s7ag0YtHybZY-ijl4",
-    accessTokenSecret: "a2KjF9aqlY3znWKOc9RY2C9DCl0",
-    serviceProvider: {
-        signatureMethod: "HMAC-SHA1"
-    }
+const auth = { 
+	consumerKey:       "WfF4qCvm5PnHJ-VlvcUaDQ", 
+	consumerSecret:    "lyloFsc0RBOmcC97d59SFTaPKjo",
+	accessToken:       "ZPpWuZk8pEcNEJ9s7ag0YtHybZY-ijl4",
+	accessTokenSecret: "a2KjF9aqlY3znWKOc9RY2C9DCl0",
+	serviceProvider: {
+		signatureMethod: "HMAC-SHA1"
+	}
 };
 
 
@@ -123,57 +114,58 @@ function checkInput(e) {
 
 function getShopsFromYelp() {
 
-    var zip = search.value;
-    var term = "store";
-    var category = "candy,chocolate";
-    var limitNumber = 10;
-    var radius = 3200;
+	const zip = search.value,
+		term = "store",
+		category = "candy,chocolate",
+		limitNumber = 10,
+		radius = 3200;
 
-    var accessor = {
-        consumerSecret: auth.consumerSecret,
-        tokenSecret: 'VDQZ77dJ2Abk9P3cNNKhfRzKsl4'
-    };
+	const accessor = {
+		consumerSecret: auth.consumerSecret,
+		tokenSecret: 'VDQZ77dJ2Abk9P3cNNKhfRzKsl4'
+	};
 
-    // Oauth setup
-    parameters = [];
-    parameters.push(['term', term]);
-    parameters.push(['location', zip]);
-    parameters.push(['limit', limitNumber]);
-    parameters.push(['category_filter', category]);
-    parameters.push(['radius_filter', radius]);    
-    parameters.push(['callback', 'calculateEachAddress']);
-    parameters.push(['oauth_consumer_key', auth.consumerKey]);
-    parameters.push(['oauth_consumer_secret', auth.consumerSecret]);
-    parameters.push(['oauth_token', 'zh3_d_yJbTJuMF6k4572vEixZLHKczcy']);
-    parameters.push(['oauth_signature_method', 'HMAC-SHA1']);
+	// Oauth setup
+	parameters = [];
+	parameters.push(['term', term]);
+	parameters.push(['location', zip]);
+	parameters.push(['limit', limitNumber]);
+	parameters.push(['category_filter', category]);
+	parameters.push(['radius_filter', radius]);    
+	parameters.push(['callback', 'calculateEachAddress']);
+	parameters.push(['oauth_consumer_key', auth.consumerKey]);
+	parameters.push(['oauth_consumer_secret', auth.consumerSecret]);
+	parameters.push(['oauth_token', 'zh3_d_yJbTJuMF6k4572vEixZLHKczcy']);
+	parameters.push(['oauth_signature_method', 'HMAC-SHA1']);
 
-    var message = { 
-        'action': 'http://api.yelp.com/v2/search',
-        'method': 'GET',
-        'parameters': parameters 
-    };
+	const message = { 
+		'action': 'https://api.yelp.com/v2/search',
+		'method': 'GET',
+		'parameters': parameters 
+	};
 
-    OAuth.setTimestampAndNonce(message);
-    OAuth.SignatureMethod.sign(message, accessor);
+	OAuth.setTimestampAndNonce(message);
+	OAuth.SignatureMethod.sign(message, accessor);
 
-    var parameterMap = OAuth.getParameterMap(message.parameters);
+	const parameterMap = OAuth.getParameterMap(message.parameters);
 
-    // make AJAX call to Yelp Api
-    $.ajax({
-        url: message.action,
-        data: parameterMap,
-        cache: true,
-        dataType: 'jsonp',
-        jsonpCallback: 'calculateEachAddress',
+
+	// make AJAX call to Yelp Api
+	$.ajax({
+		url: message.action,
+		data: parameterMap,
+		cache: true,
+		dataType: 'jsonp',
+		jsonpCallback: 'calculateEachAddress',
 
 
 	// A function to be called if the request fails
-      	error: function(jqXHR, textStatus, errorThrown) {
-           	alert('Something went wrong. Please try again later!');
-           	console.log('Status code: ' + jqXHR.status);
-           	console.log('errorThrown: ' + errorThrown + ', jqXHR.responseText: ' +jqXHR.responseText);
-           }
-    });
+		error: function(jqXHR, textStatus, errorThrown) {
+			alert('Something went wrong. Please try again later!');
+			console.log('Status code: ' + jqXHR.status);
+			console.log('errorThrown: ' + errorThrown + ', jqXHR.responseText: ' +jqXHR.responseText);
+		}
+	});
 }
 
 
@@ -187,96 +179,94 @@ function calculateEachAddress(json) {
 }
 
 
-
 function displayOnMap(business) {
 
-	// get saved shops from local storage 
-	// and set like status (red heart) in the relevant infobox
-	var list = JSON.parse(localStorage.getItem("saved"));
+// get saved shops from local storage 
+// and set like status (red heart) in the relevant infobox
+const list = JSON.parse(localStorage.getItem("saved"));
 
-	if (list !== null) {
-		if (list[business["id"]] === true) {
-			business.liked = true;
-		}
+if (list !== null) {
+	if (list[business["id"]] === true) {
+		business.liked = true;
 	}
+}
 
-	var city = ", San Francisco, CA";
-	var storedAddress = business["location"]["address"][0] + city;
-
-
-	// code address into coordinates and set marker on the map
-  	geocoder.geocode( { 'address': storedAddress}, function(result, status) {
-
-  		
-    		var p = result[0].geometry.location;
-    		console.log(result[0]);
-      		map.setCenter(p);
-      		var lat=p.lat();
-          	var lng=p.lng();
-
-      		marker = new google.maps.Marker({
-	        	map: map,
-	        	position: new google.maps.LatLng(lat,lng),
-	        	animation: google.maps.Animation.DROP,
-	        	title: business["name"],
-	        	icon: "images/icon1.png"
-      		});
-
-      		// save marker to markerMap for future use under relevant shop id
-			markerMap.set(business["id"], marker);
+const city = ", San Francisco, CA",
+	storedAddress = business["location"]["address"][0] + city;
 
 
-      		// zoom in when clicking on marker
-      		google.maps.event.addListenerOnce(marker,'click', zoomToMarker);
+// code address into coordinates and set marker on the map
+  geocoder.geocode( { 'address': storedAddress}, function(result, status) {
+
+		const p = result[0].geometry.location,
+			lat = p.lat(),
+			lng = p.lng();
+		  map.setCenter(p);
+		  
+
+		  marker = new google.maps.Marker({
+			map: map,
+			position: new google.maps.LatLng(lat,lng),
+			animation: google.maps.Animation.DROP,
+			title: business["name"],
+			icon: "images/icon1.png"
+		  });
+
+		  // save marker to markerMap for future use under relevant shop id
+		markerMap.set(business["id"], marker);
 
 
-      		// create infobox structure and content for each business
-   			var newInfobox = createInfoboxContent(business);
+		  // zoom in when clicking on marker
+		  google.maps.event.addListenerOnce(marker,'click', zoomToMarker);
 
 
-   			// if checkbox is checked (=shop is liked), save shop to local storage
-      		checkbox.addEventListener("click", saveLikedShop);
+		  // create infobox structure and content for each business
+		   const newInfobox = createInfoboxContent(business);
 
 
-			// change color of marker depending on liked/not liked status
-			checkbox.addEventListener("click", changeMarkersColor);
+		   // if checkbox is checked (=shop is liked), save shop to local storage
+		  checkbox.addEventListener("click", saveLikedShop);
+
+
+		// change color of marker depending on liked/not liked status
+		checkbox.addEventListener("click", changeMarkersColor);
 
 
 
-			// mark liked shops with red marker
-			if (business.liked === true) {
-				checkbox.setAttribute("checked", true);
-				marker.setIcon("images/icon2.png");
-			}
+		// mark liked shops with red marker
+		if (business.liked === true) {
+			checkbox.setAttribute("checked", true);
+			marker.setIcon("images/icon2.png");
+		}
 
 
-            //create infoBox on a map
-      		infobox = new InfoBox( {
-				content: "",
-				disableAutoPan: false,
-				pixelOffset: new google.maps.Size(-150, 0),
-				zIndex: null,
-				boxStyle: { 
-					 width: "300px"
-				},
-				closeBoxURL: "images/close.png",
-				infoBoxClearance: new google.maps.Size(1, 1),
-				isHidden: false,
-				pane: "floatPane",
-				enableEventPropagation: false
-			});
-	
-
-      		// open infobox and unpdate its content 
-			google.maps.event.addListener(marker, 'click', function() {
-				infobox.setContent(newInfobox);
-				infobox.open(map, this);
-			});
+		//create infoBox on a map
+		  infobox = new InfoBox( {
+			content: "",
+			disableAutoPan: false,
+			pixelOffset: new google.maps.Size(-150, 0),
+			zIndex: null,
+			boxStyle: { 
+				 width: "300px"
+			},
+			closeBoxURL: "images/close.png",
+			infoBoxClearance: new google.maps.Size(1, 1),
+			isHidden: false,
+			pane: "floatPane",
+			enableEventPropagation: false
+		});
 
 
-			// save each infobox to array for future use
-			infoboxArray.push(infobox);
-	});
+		  // open infobox and update its content 
+		google.maps.event.addListener(marker, 'click', function() {
+			infobox.setContent(newInfobox);
+			infobox.open(map, this);
+		});
+
+
+		// save each infobox to array for future use
+		infoboxArray.push(infobox);
+});
 }
 
 function zoomToMarker() {
@@ -295,17 +285,16 @@ function createInfoboxContent(yelpBusiness) {
 	// 		<p>Shop Address</p>
 	// 		<p class="link"><a href="#" target="_blank">Visit the website</a></p>
 			// <label>
-	       		//<input type="checkbox" class="checkbox" id="#" business_id="#">
+				//<input type="checkbox" class="checkbox" id="#" business_id="#">
 				//<span class="heart"></span>
 			//</label>
 	// 	</div>
 		//<img src="#" class="shop-image" alt="Image of the shop">
 	// </div>
 
-	var infoboxContent = document.createElement("div");
 	checkbox = document.createElement("input");
-
-	var	image = document.createElement("img"),
+	const infoboxContent = document.createElement("div"),
+		image = document.createElement("img"),
 		div = document.createElement("div"),
 		name = document.createElement("h3"),
 		address = document.createElement("p"),
@@ -369,8 +358,8 @@ function changeMarkersColor() {
 
 
 function saveLikedShop(event) {
-	var id = event.target.id;
-	var list = JSON.parse(localStorage.getItem("saved"));
+	const id = event.target.id,
+		list = JSON.parse(localStorage.getItem("saved"));
 	if (list === null) {
 		list = {};
 	}
@@ -386,20 +375,30 @@ function saveLikedShop(event) {
 
 function closeAllInfoboxes() {
 	if (infoboxArray) {
-		for (i in infoboxArray) {
+		for (let i in infoboxArray) {
 			infoboxArray[i].close();
 		}
 	}
 };
 
 function clearMarkers() {
-	for (var marker of markerMap.values()) {
+	for (let marker of markerMap.values()) {
 		marker.setMap(null);
 		delete marker;
 	}
-  	markerMap = new Map();
+	markerMap = new Map();
 };
 
+function closeAuthorOrZipCodesBox(e) {
+	const target = e.target;
+
+	if (target.className === 'icon' || target.className === 'question-mark') {
+		return;
+	} else {
+		aboutAuthor.classList.remove("open-about");
+		validCodes.classList.remove("show-instructions");
+	}
+};
 
 // reset map
 function startNewSearch() {
