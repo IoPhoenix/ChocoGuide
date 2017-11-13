@@ -22,7 +22,7 @@ let markerMap = new Map(),
 
 
 
-// Events and Event Handlers
+// Events
 // ==============================================================
 
 // load the initial google map
@@ -57,27 +57,26 @@ document.addEventListener("click", closeAuthorOrZipCodesBox);
 // Function
 // ==============================================================
 
-
 function initialize() {
-  geocoder = new google.maps.Geocoder();
-const latlng = new google.maps.LatLng(37.773972, -122.431297);
-const mapOptions = {
-	scrollwheel: false,
-	zoom: 12,
-	center: latlng,
-	mapTypeId: google.maps.MapTypeId.ROADMAP,
-	panControl: false,
-	mapTypeControl: true,
-	mapTypeControlOptions: {
-		style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
-		position: google.maps.ControlPosition.RIGHT_BOTTOM
-	},
-	zoomControl: true,
-	zoomControlOptions: {
-		style: google.maps.ZoomControlStyle.LARGE,
-		position: google.maps.ControlPosition.LEFT_CENTER
+	geocoder = new google.maps.Geocoder();
+	const latlng = new google.maps.LatLng(37.773972, -122.431297);
+	const mapOptions = {
+		scrollwheel: false,
+		zoom: 12,
+		center: latlng,
+		mapTypeId: google.maps.MapTypeId.ROADMAP,
+		panControl: false,
+		mapTypeControl: true,
+		mapTypeControlOptions: {
+			style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
+			position: google.maps.ControlPosition.RIGHT_BOTTOM
+		},
+		zoomControl: true,
+		zoomControlOptions: {
+			style: google.maps.ZoomControlStyle.LARGE,
+			position: google.maps.ControlPosition.LEFT_CENTER
+		}
 	}
-}
   map = new google.maps.Map(mapContainer, mapOptions);
 }
 
@@ -181,21 +180,21 @@ function calculateEachAddress(json) {
 
 function displayOnMap(business) {
 
-// get saved shops from local storage 
-// and set like status (red heart) in the relevant infobox
-const list = JSON.parse(localStorage.getItem("saved"));
+	// get saved shops from local storage 
+	// and set like status (red heart) in the relevant infobox
+	const list = JSON.parse(localStorage.getItem("saved"));
 
-if (list !== null) {
-	if (list[business["id"]] === true) {
-		business.liked = true;
+	if (list !== null) {
+		if (list[business["id"]] === true) {
+			business.liked = true;
+		}
 	}
-}
 
-const city = ", San Francisco, CA",
-	storedAddress = business["location"]["address"][0] + city;
+	const city = ", San Francisco, CA",
+		storedAddress = business["location"]["address"][0] + city;
 
 
-// code address into coordinates and set marker on the map
+	// code address into coordinates and set marker on the map
   geocoder.geocode( { 'address': storedAddress}, function(result, status) {
 
 		const p = result[0].geometry.location,
@@ -358,8 +357,8 @@ function changeMarkersColor() {
 
 
 function saveLikedShop(event) {
-	const id = event.target.id,
-		list = JSON.parse(localStorage.getItem("saved"));
+	const id = event.target.id;
+	let list = JSON.parse(localStorage.getItem("saved"));
 	if (list === null) {
 		list = {};
 	}

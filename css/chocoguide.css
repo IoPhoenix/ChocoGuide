@@ -1,4 +1,3 @@
-
 html, body, #map-canvas {
     height: 100%;
     background-color: #A3CCFF;
@@ -12,25 +11,21 @@ header {
     text-align: center;
     background-color: rgb(255,127,80);
     border-bottom: 2px solid rgb(252, 225, 194);
-    display: -webkit-box;      /* OLD - iOS 6-, Safari 3.1-6 */
-    display: -moz-box;         /* OLD - Firefox 19- (buggy but mostly works) */
-    display: -ms-flexbox;      /* TWEENER - IE 10 */
-    display: -webkit-flex;     /* NEW - Chrome */
-    display: flex;             /* NEW, Spec - Opera 12.1, Firefox 20+ */
-    -webkit-flex-direction: row;
-    -moz-flex-direction: row;
-    -ms-flex-direction: row;
-    -o-flex-direction: row;
-    flex-direction: row;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+     -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: row;
+            flex-direction: row;
 }
 
 h1 {
-    -webkit-flex: 1;
-    -moz-flex: 1;
-    -ms-flex: 1;
-    -o-flex: 1;
-    flex: 1;
-    margin-top: 4px;
+    -webkit-box-flex: 1;
+            -ms-flex: 1;
+                flex: 1;
+    -webkit-transform: translateY(-5px);
+            transform: translateY(-5px);
     margin-right: 10px;
     font-family: 'Pacifico', cursive;
     font-size: 25px;
@@ -41,25 +36,21 @@ h1 {
 
 h2 {
     text-transform: uppercase;
-   -webkit-flex: 2;
-   -moz-flex: 2;
-   -ms-flex: 2;
-   -o-flex: 2;
-   flex: 2;
-    margin: 20px 0px;
+    -webkit-box-flex: 2;
+    -ms-flex: 2;
+        flex: 2;
+    margin: 24px 0px;
     font-family: 'Merriweather Sans', sans-serif;
     font-weight: 400;
     font-size: 13px;
-    margin-bottom: 10px;
 }
 
 header .intro {
-    -webkit-flex: .4;
-    -moz-flex: .4;
+    -webkit-box-flex: .4;
     -ms-flex: .4;
-    -o-flex: .4;
-    flex: .4;
+        flex: .4;
     width: 20%;
+    z-index: 1;
 }
 
 
@@ -72,6 +63,7 @@ header .icon {
     border-radius: 22px;
     padding: 3px;
     cursor: pointer;
+    -webkit-transition: all 0.5s ease;
     transition: all 0.5s ease;
 }
 
@@ -84,7 +76,7 @@ header .icon:hover {
 /* ------------------------------------------------*/
 
 .about  {
-    text-align: center;
+    text-align: left;
     display: none;
     font-size: 13px;
     position: absolute;
@@ -92,7 +84,7 @@ header .icon:hover {
     top: 90%;
     left: 3%;
     width: 200px;
-    padding: 10px;
+    padding: 18px;
     background: rgba(0,0,0,.8);
     color: #F5F5DC;
     border-radius: 10px;
@@ -110,12 +102,14 @@ header .icon:hover {
     height: 100px;
     border-radius: 5em;
     border: 2px solid #F5F5DC;
-    margin-bottom: 6px;
+    margin: 0 auto;
+    display: block;
 }
 
 .about.open-about a {
     color: #FFA500;
     text-decoration: none; 
+    -webkit-transition: all 0.5s;
     transition: all 0.5s;
 }
 
@@ -129,12 +123,10 @@ header .icon:hover {
 /* ------------------------------------------------*/
 
 #panel {
-    -webkit-flex: 2.6;
-    -moz-flex: 2.6;
+    -webkit-box-flex: 2.6;
     -ms-flex: 2.6;
-    -o-flex: 2.6;
-    flex: 2.6;
-    padding: 15px;
+        flex: 2.6;
+    padding: 18px;
     text-align: right;
 }
 
@@ -157,7 +149,8 @@ header .icon:hover {
     outline: none;
     text-align: center;
     box-shadow: inset 0 0 7px #8B4513;
-     transition: all .7s ease;
+    -webkit-transition: all .7s ease;
+    transition: all .7s ease;
 }
 
 
@@ -199,6 +192,7 @@ input[type="search"] {
     font-size: 13px;
     background-color: #CD853F;
     cursor: pointer;
+    -webkit-transition: all .5s ease;
     transition: all .5s ease;
 }
 
@@ -256,11 +250,9 @@ table td {
     display: -ms-flexbox;      
     display: -webkit-flex;     
     display: flex;       
-    -webkit-justify-content: space-between;
-    -moz-justify-content: space-between;
-    -ms-justify-content: space-between;
-    -o-justify-content: space-between;    
-    justify-content: space-between;
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+        justify-content: space-between;
     background-color: #96BE00;
     border: 1px solid rgb(252, 225, 194);
     border-radius: 3px;
@@ -281,7 +273,7 @@ table td {
 }
 
 /* position close button */
-.infoBox>img {
+.infoBox > img {
     top: 12px;
     right: 17px;
     width: 12px;
@@ -289,11 +281,9 @@ table td {
 }
 
 .wrapper .text {
-    -webkit-flex: 1;
-    -moz-flex: 1;
+    -webkit-box-flex: 1;
     -ms-flex: 1;
-    -o-flex: 1;
-    flex: 1;
+        flex: 1;
     margin-right: 5px;
 }
 
@@ -310,7 +300,7 @@ table td {
 }
 
 .wrapper .text p {
-    margin-top: 5px;
+    margin: 5px 0;
     font-size: 15px;
     font-weight: 300;
 }
@@ -323,6 +313,7 @@ table td {
     text-decoration: none;
     font-size: 12px;
     margin-bottom: 5px; 
+    -webkit-transition: all 0.5s;
     transition: all 0.5s;
 }
 
@@ -332,11 +323,9 @@ table td {
 
 .wrapper .shop-image {
     border: 1px solid rgb(252, 225, 194);
-    -webkit-flex: 1;
-    -moz-flex: 1;
+    -webkit-box-flex: 1;
     -ms-flex: 1;
-    -o-flex: 1;
-    flex: 1;
+        flex: 1;
     width: 100%;
     height: 100%;
     max-width: 135px;
