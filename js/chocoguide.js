@@ -98,7 +98,7 @@ function checkInput(e) {
 }
 
 // Authentication keys
-const apiKey = 'my_api_key';
+const apiKey = 'SqB0rgNPcuX3xiMrIy0y74iPrmM-6QII5IKDMbNUiyxPuQK2VKYhLm5mo_FVGh-gj9rIIVUvmROW0g0cFhvPZqg_xyLb-f654FPZX5L6kWTS9ijsi42an0HUHHZNW3Yx';
 
 function getShopsFromYelp() {
 	const zip = search.value,
@@ -107,21 +107,22 @@ function getShopsFromYelp() {
 		limitNumber = 10,
 		radius = 3200;
 
-
-	parameters = [];
-	parameters.push(['term', term]);
-	parameters.push(['location', zip]);
-	parameters.push(['limit', limitNumber]);
-	parameters.push(['categories', categories]);
-	parameters.push(['radius', radius]);    
-		
+	const parameters = {
+		'term': term,
+		'location': zip,
+		'categories': categories,
+		'limit': limitNumber,
+		'radius': radius
+	}
 
 	const url = 'https://api.yelp.com/v3/businesses/search';
 	const parameterMap = $.param(parameters, true);
 
-	// make AJAX call to Yelp Api
+	// make AJAX call to Yelp Fusion Api
 	$.ajax({
 		url: url,
+		crossDomain: true,
+		beforeSend: function(xhr){xhr.setRequestHeader('Authorization', 'Bearer SqB0rgNPcuX3xiMrIy0y74iPrmM-6QII5IKDMbNUiyxPuQK2VKYhLm5mo_FVGh-gj9rIIVUvmROW0g0cFhvPZqg_xyLb-f654FPZX5L6kWTS9ijsi42an0HUHHZNW3Yx');},
 		headers: {
 			'Content-Type':'application/json',
 			'Authorization': `Bearer ${apiKey}`
@@ -131,9 +132,14 @@ function getShopsFromYelp() {
 		dataType: 'jsonp',
 		jsonp: false,
 		jsonpCallback: 'calculateEachAddress',
+		xhrFields: {
+			withCredentials: true
+		},
+		success: function (response) {
+			console.log('success');
+		},
 
-
-	// A function to be called if the request fails
+		// A function to be called if the request fails
 		error: function(jqXHR, textStatus, errorThrown) {
 			alert('Something went wrong. Please try again later!');
 			console.log('Status code: ' + jqXHR.status);
@@ -143,7 +149,6 @@ function getShopsFromYelp() {
 	.always(function() {
 		console.log("AJAX request finished");
 	});
-}
 
 
 // clear markers and infoboxes from previous search
