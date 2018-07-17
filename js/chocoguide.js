@@ -87,19 +87,6 @@ function resizeMap() {
 	map.setCenter(center);
 };
 
-
-// Authentication keys/tokens
-const auth = { 
-	consumerKey:       "WfF4qCvm5PnHJ-VlvcUaDQ", 
-	consumerSecret:    "lyloFsc0RBOmcC97d59SFTaPKjo",
-	accessToken:       "ZPpWuZk8pEcNEJ9s7ag0YtHybZY-ijl4",
-	accessTokenSecret: "a2KjF9aqlY3znWKOc9RY2C9DCl0",
-	serviceProvider: {
-		signatureMethod: "HMAC-SHA1"
-	}
-};
-
-
 // check that correct zip code is given
 function checkInput(e) {
 	e.preventDefault();
@@ -110,51 +97,39 @@ function checkInput(e) {
 	}
 }
 
+// Authentication keys
+const apiKey = 'my_api_key';
 
 function getShopsFromYelp() {
-
 	const zip = search.value,
 		term = "store",
-		category = "candy,chocolate",
+		categories = "candy,chocolate",
 		limitNumber = 10,
 		radius = 3200;
 
-	const accessor = {
-		consumerSecret: auth.consumerSecret,
-		tokenSecret: 'VDQZ77dJ2Abk9P3cNNKhfRzKsl4'
-	};
 
-	// Oauth setup
 	parameters = [];
 	parameters.push(['term', term]);
 	parameters.push(['location', zip]);
 	parameters.push(['limit', limitNumber]);
-	parameters.push(['category_filter', category]);
-	parameters.push(['radius_filter', radius]);    
-	parameters.push(['callback', 'calculateEachAddress']);
-	parameters.push(['oauth_consumer_key', auth.consumerKey]);
-	parameters.push(['oauth_consumer_secret', auth.consumerSecret]);
-	parameters.push(['oauth_token', 'zh3_d_yJbTJuMF6k4572vEixZLHKczcy']);
-	parameters.push(['oauth_signature_method', 'HMAC-SHA1']);
+	parameters.push(['categories', categories]);
+	parameters.push(['radius', radius]);    
+		
 
-	const message = { 
-		'action': 'https://api.yelp.com/v2/search',
-		'method': 'GET',
-		'parameters': parameters 
-	};
-
-	OAuth.setTimestampAndNonce(message);
-	OAuth.SignatureMethod.sign(message, accessor);
-
-	const parameterMap = OAuth.getParameterMap(message.parameters);
-
+	const url = 'https://api.yelp.com/v3/businesses/search';
+	const parameterMap = $.param(parameters, true);
 
 	// make AJAX call to Yelp Api
 	$.ajax({
-		url: message.action,
+		url: url,
+		headers: {
+			'Content-Type':'application/json',
+			'Authorization': `Bearer ${apiKey}`
+		},
 		data: parameterMap,
 		cache: true,
 		dataType: 'jsonp',
+		jsonp: false,
 		jsonpCallback: 'calculateEachAddress',
 
 
@@ -164,6 +139,9 @@ function getShopsFromYelp() {
 			console.log('Status code: ' + jqXHR.status);
 			console.log('errorThrown: ' + errorThrown + ', jqXHR.responseText: ' +jqXHR.responseText);
 		}
+	})
+	.always(function() {
+		console.log("AJAX request finished");
 	});
 }
 
