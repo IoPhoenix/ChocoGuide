@@ -149,6 +149,7 @@ function getShopsFromYelp() {
 	.always(function() {
 		console.log("AJAX request finished");
 	});
+}
 
 
 // clear markers and infoboxes from previous search
