@@ -295,9 +295,46 @@ table td {
     margin: 6px;
 }
 
-.wrapper .rating {
-    height: 24px;
+.wrapper .rating:before {
+    content: '';
+    background: url(../images/stars_map.png) 0 0 no-repeat;
+    margin-top: 8px;
+    height: 16px;
+    width: 100%;
+    display: block;
 }
+
+#zero-stars.rating:before {
+    background-position: 0 0;
+}
+#one-stars.rating:before {
+    background-position: 0 -18px;
+}
+#one-and-half-stars.rating:before {
+    background-position: 0 -37px;
+}
+#two-stars.rating:before {
+    background-position: 0 -55px;
+}
+#two-and-half-stars.rating:before {
+    background-position: 0 -75px;
+}
+#three-stars.rating:before {
+    background-position: 0 -94px;
+}
+#three-and-half-stars.rating:before {
+    background-position: 0 -113px;
+}
+#four-stars.rating:before {
+    background-position: 0 -132px;
+}
+#four-and-half-stars.rating:before {
+    background-position: 0 -151px;
+}
+#five-stars.rating:before {
+    background-position: 0 -171px;
+}
+
 
 .wrapper .text p {
     margin: 5px 0;

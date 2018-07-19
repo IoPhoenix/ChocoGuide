@@ -88,38 +88,29 @@ function resizeMap() {
 // check that correct zip code is given
 function checkInput(e) {
 	e.preventDefault();
-	if (zipCodes.indexOf(parseInt(search.value)) === -1) {
+	if (!zipCodes.includes(parseInt(search.value))) {
 		alert("Please enter a proper San Francisco zip code!");
 	} else {
-		getShopsFromYelp();
+		// await for response from Yelp and then proceed
+		getShopsFromYelp().then(calculateEachAddress);
 	}
 }
 
 // get data from Yelp Fusion API
-function getShopsFromYelp() {
-	const zip = search.value,
-		url = 'https://www.olgafomin.com/api/stores';
+async function getShopsFromYelp() {
+	const zip = search.value;
 
-	// search params are:
-		// location: zip
-		// term = "store",
-		// categories = "candy,chocolate",
-		// limitNumber = 10,
-		// radius = 3200;
-
-	// make AJAX call to back end
-	fetch(url, {
-            method: 'POST',
-            headers: {
-				'Content-Type': 'application/json'
-			},
-            body: JSON.stringify({
-                location: zip
-            })
-        })
-		.then(response => response.json())
-        .then(json => calculateEachAddress(json))
-        .catch(error => console.log('Error: ', error));
+	// make AJAX call to backend
+	const url = 'https://www.olgafomin.com/api/stores';
+	const responseFromBackend = await fetch(url, {
+		method: 'POST',
+		headers: {'Content-Type': 'application/json'},
+		body: JSON.stringify({
+				location: zip
+			})
+		});
+	const businesses = await responseFromBackend.json();
+	return businesses;
 }
 
 // clear markers and infoboxes from previous search
@@ -133,7 +124,6 @@ function calculateEachAddress(json) {
 
 
 function displayOnMap(business) {
-
 	// get saved shops from local storage 
 	// and set like status (red heart) in the relevant infobox
 	const list = JSON.parse(localStorage.getItem("saved"));
@@ -145,11 +135,11 @@ function displayOnMap(business) {
 	}
 
 	const city = ", San Francisco, CA",
-		storedAddress = business["location"]["address"][0] + city;
+		storedAddress = business["location"]["address1"] + city;
 
 
 	// code address into coordinates and set marker on the map
-  geocoder.geocode( { 'address': storedAddress}, function(result, status) {
+  geocoder.geocode( { 'address': storedAddress}, function(result) {
 
 		const p = result[0].geometry.location,
 			lat = p.lat(),
@@ -169,16 +159,16 @@ function displayOnMap(business) {
 		markerMap.set(business["id"], marker);
 
 
-		  // zoom in when clicking on marker
-		  google.maps.event.addListenerOnce(marker,'click', zoomToMarker);
+		// zoom in when clicking on marker
+		google.maps.event.addListenerOnce(marker,'click', zoomToMarker);
 
 
-		  // create infobox structure and content for each business
-		   const newInfobox = createInfoboxContent(business);
+		// create infobox structure and content for each business
+		const newInfobox = createInfoboxContent(business);
 
 
-		   // if checkbox is checked (=shop is liked), save shop to local storage
-		  checkbox.addEventListener("click", saveLikedShop);
+		// if checkbox is checked (=shop is liked), save shop to local storage
+		checkbox.addEventListener("click", saveLikedShop);
 
 
 		// change color of marker depending on liked/not liked status
@@ -216,10 +206,9 @@ function displayOnMap(business) {
 			infobox.open(map, this);
 		});
 
-
 		// save each infobox to array for future use
 		infoboxArray.push(infobox);
-});
+	});
 }
 
 function zoomToMarker() {
@@ -229,12 +218,11 @@ function zoomToMarker() {
 
 
 function createInfoboxContent(yelpBusiness) {
-
 	// EXAMPLE STRUCTURE: 
 	// <div class="wrapper">
 	// 	<div class="text">
 	//		<h3 class="name">Shop Name</h3>
-	//		<img src="#" class="rating" alt="rating ruler">
+	//		<div class="rating" id="<depends on rating>">
 	// 		<p>Shop Address</p>
 	// 		<p class="link"><a href="#" target="_blank">Visit the website</a></p>
 			// <label>
@@ -253,7 +241,7 @@ function createInfoboxContent(yelpBusiness) {
 		address = document.createElement("p"),
 		website = document.createElement("p"),
 		websiteUrl = document.createElement("a"),
-		ratingImage = document.createElement("img"),
+		ratingImage = document.createElement("div"),
 		label    = document.createElement("label"),
 		span = document.createElement("span");
 
@@ -265,13 +253,13 @@ function createInfoboxContent(yelpBusiness) {
 	div.classList.add("text");
 	name.classList.add("name");
 	name.textContent = yelpBusiness["name"];
-	address.textContent = yelpBusiness["location"]["address"][0] + ", " + yelpBusiness["location"]["city"] + ", " + yelpBusiness["location"]["postal_code"];
+	address.textContent = yelpBusiness["location"]["address1"] + ", " + yelpBusiness["location"]["city"] + ", " + yelpBusiness["location"]["zip_code"];
 	website.classList.add("link");
-	websiteUrl.textContent = "visit the website";
+	websiteUrl.textContent = "visit this store on Yelp";
 	websiteUrl.setAttribute("href", yelpBusiness["url"]);
 	websiteUrl.setAttribute("target", "_blank");
 	ratingImage.classList.add("rating");
-	ratingImage.setAttribute("src", yelpBusiness["rating_img_url_large"]);
+	ratingImage.setAttribute("id", chooseStars(yelpBusiness["rating"]));
 	ratingImage.setAttribute("alt", "Rating ruler");
 	checkbox.classList.add("checkbox");
 	checkbox.setAttribute("type", "checkbox");
@@ -293,10 +281,42 @@ function createInfoboxContent(yelpBusiness) {
 	return infoboxContent;
 }
 
-
+function chooseStars(rating) {
+	let ratingNum = '';
+	switch(rating) {
+		 case 1:
+			ratingNum = 'one';
+			break;
+		case 1.5:
+			ratingNum = 'one-and-half';
+			break;
+		case 2:
+			ratingNum = 'two';
+			break;
+		case 2.5:
+			ratingNum = 'two-and-half';
+			break;
+		case 3:
+			ratingNum = 'three';
+			break;
+		case 3.5:
+			ratingNum = 'three-and-half';
+			break;
+		 case 4:
+			ratingNum = 'four';
+			break;
+		 case 4.5:
+			ratingNum = 'four-and-half';
+			case 5:
+			ratingNum = 'five';
+			break;
+		 default:
+			ratingNum = 'zero';
+	}
+	return `${ratingNum}-stars`;
+}
 
 function changeMarkersColor() {
-
 	// give id to marker (id is equal to shop id)
 	marker =  markerMap.get(this.getAttribute("business_id"));
 
@@ -309,7 +329,7 @@ function changeMarkersColor() {
 };
 
 
-
+// save liked stores in local storage
 function saveLikedShop(event) {
 	const id = event.target.id;
 	let list = JSON.parse(localStorage.getItem("saved"));
@@ -317,12 +337,11 @@ function saveLikedShop(event) {
 		list = {};
 	}
 
-	isChecked = event.target.checked;
+	const isChecked = event.target.checked;
 
 	list[id] = isChecked;
 	localStorage.setItem("saved", JSON.stringify(list));
 };
-
 
 
 
