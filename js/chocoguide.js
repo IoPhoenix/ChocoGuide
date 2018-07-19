@@ -31,12 +31,10 @@ google.maps.event.addDomListener(window, "load", initialize);
 // make the map responsive
 google.maps.event.addDomListener(window, "resize", resizeMap);
 
-
 // add event listener to the form
 form.addEventListener("submit", checkInput);
 
-
-// open/close text about the author when clicking on the cable car icon
+// toggle text about the author when clicking on the cable car icon
 icon.addEventListener("click", function(e) {
 	aboutAuthor.classList.toggle("open-about");
 });
@@ -54,7 +52,7 @@ document.addEventListener("click", closeAuthorOrZipCodesBox);
 
 
 
-// Function
+// Functions
 // ==============================================================
 
 function initialize() {
@@ -97,60 +95,32 @@ function checkInput(e) {
 	}
 }
 
-// Authentication keys
-const apiKey = 'SqB0rgNPcuX3xiMrIy0y74iPrmM-6QII5IKDMbNUiyxPuQK2VKYhLm5mo_FVGh-gj9rIIVUvmROW0g0cFhvPZqg_xyLb-f654FPZX5L6kWTS9ijsi42an0HUHHZNW3Yx';
-
+// get data from Yelp Fusion API
 function getShopsFromYelp() {
 	const zip = search.value,
-		term = "store",
-		categories = "candy,chocolate",
-		limitNumber = 10,
-		radius = 3200;
+		url = 'https://www.olgafomin.com/api/stores';
 
-	const parameters = {
-		'term': term,
-		'location': zip,
-		'categories': categories,
-		'limit': limitNumber,
-		'radius': radius
-	}
+	// search params are:
+		// location: zip
+		// term = "store",
+		// categories = "candy,chocolate",
+		// limitNumber = 10,
+		// radius = 3200;
 
-	const url = 'https://api.yelp.com/v3/businesses/search';
-	const parameterMap = $.param(parameters, true);
-
-	// make AJAX call to Yelp Fusion Api
-	$.ajax({
-		url: url,
-		crossDomain: true,
-		beforeSend: function(xhr){xhr.setRequestHeader('Authorization', 'Bearer SqB0rgNPcuX3xiMrIy0y74iPrmM-6QII5IKDMbNUiyxPuQK2VKYhLm5mo_FVGh-gj9rIIVUvmROW0g0cFhvPZqg_xyLb-f654FPZX5L6kWTS9ijsi42an0HUHHZNW3Yx');},
-		headers: {
-			'Content-Type':'application/json',
-			'Authorization': `Bearer ${apiKey}`
-		},
-		data: parameterMap,
-		cache: true,
-		dataType: 'jsonp',
-		jsonp: false,
-		jsonpCallback: 'calculateEachAddress',
-		xhrFields: {
-			withCredentials: true
-		},
-		success: function (response) {
-			console.log('success');
-		},
-
-		// A function to be called if the request fails
-		error: function(jqXHR, textStatus, errorThrown) {
-			alert('Something went wrong. Please try again later!');
-			console.log('Status code: ' + jqXHR.status);
-			console.log('errorThrown: ' + errorThrown + ', jqXHR.responseText: ' +jqXHR.responseText);
-		}
-	})
-	.always(function() {
-		console.log("AJAX request finished");
-	});
+	// make AJAX call to back end
+	fetch(url, {
+            method: 'POST',
+            headers: {
+				'Content-Type': 'application/json'
+			},
+            body: JSON.stringify({
+                location: zip
+            })
+        })
+		.then(response => response.json())
+        .then(json => calculateEachAddress(json))
+        .catch(error => console.log('Error: ', error));
 }
-
 
 // clear markers and infoboxes from previous search
 // calculate address and display each shop on a map
